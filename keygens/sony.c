@@ -3,6 +3,7 @@
 #include <string.h>
 #include <regex.h>
 #include "sony.h"
+#include "../utils/solver.h"
 
 //1234567 = 9648669
 
@@ -21,24 +22,12 @@ char *sonyKeygen(const char *serial) {
 }
 
 char *sonySolver(const char *serial) {
-    regex_t regex;
-    int reti;
-
-    const char *pattern = "^[0-9]{8}$";
-
-    reti = regcomp(&regex, pattern, REG_EXTENDED);
-    if (reti) {
-        fprintf(stderr, "Could not compile regex\n");
-        return 0;
-    }
-
-    reti = regexec(&regex, serial, 0, NULL, 0);
-    regfree(&regex);
-
-    if (reti) {
-        return sonyKeygen(serial);
-    } else {
-        fprintf(stderr, "Invalid serial\n");
-        return 0;
-    }
+    Solver sony = makeSolver(
+        "sony",
+        "Old Sony",
+        "^[0-9]{8}$",
+        sonyKeygen
+    );
+    char *password = runSolver(sony, serial);
+    return password;
 }
