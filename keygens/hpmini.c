@@ -4,12 +4,6 @@
 #include "hpmini.h"
 #include <stdlib.h>
 #include "../utils/utils.h"
-#include "../utils/solver.h"
-
-typedef struct {
-    char key;
-    char value;
-} CharMap;
 
 CharMap table1[] = {
     {'1', '3'}, {'0', '1'}, {'3', 'F'}, {'2', '7'}, {'5', 'Q'}, {'4', 'V'},
@@ -31,14 +25,6 @@ CharMap table2[] = {
 
 #define TABLE1_SIZE (sizeof(table1) / sizeof(CharMap))
 #define TABLE2_SIZE (sizeof(table2) / sizeof(CharMap))
-
-char lookup(CharMap *table, size_t size, char key) {
-    for (size_t i = 0; i < size; i++) {
-        if (table[i].key == key)
-            return table[i].value;
-    }
-    return '\0'; // or some sentinel for "not found"
-}
 
 char *hpminiKeygen(const char *serial) {
     char password1[64] = {0};
