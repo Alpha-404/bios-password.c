@@ -8,6 +8,7 @@
  
 #define MAX_ATTEMPTS 7000000
 
+static PhoenixSolver* currentPhoenixSolver = NULL;
 static PhoenixInfo *currentPhoenixInfo = NULL;
 
 const char digitsOnly[] = "123456789";
@@ -180,11 +181,18 @@ static char* phoenixKeygenWrapper(const char* code) {
     char* result = NULL;
 
     if (results) {
-        if (results[0]) {
-            result = strdup(results[0]);  // copy output to return safely
-            free(results[0]);             // free original
+        for (int i = 0; results[i]; ++i) {
+            if (!currentPhoenixSolver || !currentPhoenixSolver->validator || currentPhoenixSolver->validator(results[i])) {
+                result = strdup(results[i]);
+                break;
+            }
         }
-        free(results);                    // always free the array
+
+        // Free all results
+        for (int i = 0; results[i]; ++i) {
+            free(results[i]);
+        }
+        free(results);
     }
 
     return result;
@@ -206,6 +214,7 @@ PhoenixSolver makePhoenixSolver(const PhoenixBios* description) {
 
     if (description) {
         if (description->salt) solver.info.salt = description->salt;
+        if (description->shift) solver.info.shift = description->shift;
         if (description->dictionary) solver.info.dictionary = description->dictionary;
     }
 
@@ -217,5 +226,9 @@ PhoenixSolver makePhoenixSolver(const PhoenixBios* description) {
     *infoCopy = solver.info;
     currentPhoenixInfo = infoCopy;
 
-    return solver;
+    PhoenixSolver* persistent = malloc(sizeof(PhoenixSolver));
+    *persistent = solver;
+    currentPhoenixSolver = persistent;
+
+    return *persistent;
 }

@@ -19,6 +19,7 @@ typedef struct {
     const char* name;
     const char* description;
     int salt;
+    int shift;
     const char* dictionary;
     const char* pattern;
 } PhoenixBios;
