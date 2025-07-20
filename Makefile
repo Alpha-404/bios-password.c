@@ -1,7 +1,7 @@
 CC = gcc
-CFLAGS = -O2 -Wall -DENABLE_SONY -DENABLE_HPMINI -DENABLE_PHOENIX # add -O2 for optim
+CFLAGS = -O2 -Wall -DENABLE_SONY -DENABLE_HPMINI -DENABLE_PHOENIX -DENABLE_HPAMI# add -O2 for optim
 LDFLAGS = -lm
-SRCS = main.c utils/solver.c utils/utils.c keygens/sony.c keygens/hpmini.c keygens/phoenix.c
+SRCS = main.c utils/solver.c utils/utils.c utils/cryptoUtils.c keygens/sony.c keygens/hpmini.c keygens/phoenix.c keygens/hpami.c
 OBJS = $(SRCS:.c=.o)
 TARGET = keygen
 
