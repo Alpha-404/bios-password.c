@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -O2
-SRCS = main.c keygens/sony.c
+SRCS = main.c utils/solver.c utils/utils.c keygens/sony.c keygens/hpmini.c
 OBJS = $(SRCS:.c=.o)
 TARGET = keygen
 
@@ -10,4 +10,4 @@ $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $^
 
 clean:
-	rm -f $(TARGET) *.o
+	rm -f $(TARGET) *.o utils/*.o keygens/*.o

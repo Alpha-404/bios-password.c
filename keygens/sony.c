@@ -20,14 +20,3 @@ char *sonyKeygen(const char *serial) {
     code[len] = '\0';
     return code;
 }
-
-char *sonySolver(const char *serial) {
-    Solver sony = makeSolver(
-        "sony",
-        "Old Sony",
-        "^[0-9]{8}$",
-        sonyKeygen
-    );
-    char *password = runSolver(sony, serial);
-    return password;
-}

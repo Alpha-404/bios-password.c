@@ -14,19 +14,28 @@ Solver makeSolver(const char *name, const char *description, const char *pattern
 
 char *runSolver(Solver solver, const char *serial) {
     regex_t regex;
-
-    if (regcomp(&regex, solver.pattern, REG_EXTENDED | REG_ICASE) != 0) {
-        fprintf(stderr, "Regex compilation failed\n");
+    int ret;
+    
+    ret = regcomp(&regex, solver.pattern, REG_EXTENDED | REG_ICASE);
+    if (ret != 0) {
+        char errbuf[128];
+        regerror(ret, &regex, errbuf, sizeof(errbuf));
+        fprintf(stderr, "Regex compilation failed: %s\n", errbuf);
         return NULL;
     }
 
-    int valid = regexec(&regex, serial, 0, NULL, 0);
+    ret = regexec(&regex, serial, 0, NULL, 0);
     regfree(&regex);
 
-    if (valid == 0) {
+    if (ret == 0) {
         return solver.keygen(serial);
+    } else if (ret == REG_NOMATCH) {
+        fprintf(stderr, "Invalid serial for %s: '%s'\n", solver.name, serial);
+        return NULL;
     } else {
-        fprintf(stderr, "Invalid serial for %s: %s\n", solver.name, serial);
+        char errbuf[128];
+        regerror(ret, &regex, errbuf, sizeof(errbuf));
+        fprintf(stderr, "Regex match error: %s\n", errbuf);
         return NULL;
     }
 }

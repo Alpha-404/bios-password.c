@@ -3,6 +3,4 @@
 
 char *sonyKeygen(const char *serial);
 
-char *sonySolver(const char *serial);
-
 #endif

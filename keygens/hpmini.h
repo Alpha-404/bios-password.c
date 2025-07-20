@@ -3,6 +3,4 @@
 
 char *hpminiKeygen(const char *serial);
 
-char *hpminiSolver(const char *serial);
-
 #endif

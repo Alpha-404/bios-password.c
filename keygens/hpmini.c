@@ -66,14 +66,3 @@ char *hpminiKeygen(const char *serial) {
         return combined;
     }
 }
-
-char *hpminiSolver(const char *serial) {
-    Solver hpmini = makeSolver(
-        "hpmini",
-        "HP/Compaq Mini Netbooks",
-        "^[0-9A-Z]{10}$",
-        hpminiKeygen
-    );
-    char *password = runSolver(hpmini, serial);
-    return password;
-}
