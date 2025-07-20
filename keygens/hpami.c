@@ -1,10 +1,8 @@
-#include "../utils/cryptoUtils.h"
-#include "../utils/solver.h"
+#include "../utils/crc32.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "hpami.h"
 
 char *hpAmiKeygen(const char *input) {
     if (strlen(input) != 8) {
