@@ -10,6 +10,7 @@
 #include "keygens/hpami.h"
 #include "keygens/insyde.h"
 #include "keygens/asus.h"
+#include "keygens/dell.h"
 
 #include "utils/solver.h"
 
@@ -127,6 +128,12 @@ int main(int argc, char *argv[]) {
         solvers[count++] = makeSolver("asus", "ASUS (alt+r in bios pw to use)", "2010-02-03", "^[0-9]{4}-[0-9]{2}-[0-9]{2}$", asusKeygen);
     #endif
 
+    #ifdef ENABLE_DELL
+        solvers[count++] = makeSolver("dellHdd", "old dell hdd serial keygen (11 char)", "*****789XYZ", "^[ *]{0,10}[A-Z0-9]{1,11}$", dellKeygen);
+        solvers[count++] = makeSolver("dellServiceTag", "old dell service tag keygen (7 char), can be right padded with *", "ABC1234", "^[A-Z0-9]{1,7}\\*{0,6}$", dellKeygen);
+
+    #endif
+
     solvers[count++] = (Solver){ NULL, NULL, NULL, NULL };
 
     if (argc != 2) {
@@ -151,15 +158,24 @@ int main(int argc, char *argv[]) {
     printf("%-18s | %-15s\n", "Solver Name", "Unlock Code(s)");
     printf("-------------------+---------------\n");
     for (int i = 0; solvers[i].name; ++i) {
+        //printf("%s : %s\n", solvers[i].name, code);
         regex_t regex;
         int reti;
         reti = regcomp(&regex, solvers[i].pattern, REG_EXTENDED | REG_NOSUB);
+
+        if (reti != 0) {
+            char errbuf[128];
+            regerror(reti, &regex, errbuf, sizeof(errbuf));
+            printf("Error on %s\n", solvers[i].name);
+            fprintf(stderr, "Regex compilation failed: %s\n", errbuf);
+            return 1;
+        }
+
         reti = regexec(&regex, serial, 0, NULL, 0);
         if (!reti) {
             code = runSolver(solvers[i], serial);
             if (code) {
                 success = 1;
-                //printf("%s : %s\n", solvers[i].name, code);
                 printf("%-18s | %-15s\n", solvers[i].name, code);
                 free(code);
             }
