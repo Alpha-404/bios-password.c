@@ -8,6 +8,7 @@
 #include "keygens/hpmini.h"
 #include "keygens/phoenix.h"
 #include "keygens/hpami.h"
+#include "keygens/insyde.h"
 
 #include "utils/solver.h"
 
@@ -115,6 +116,12 @@ int main(int argc, char *argv[]) {
         solvers[count++] = makeSolver("hpami", "HP AMI", "CNU1234ABX", "^[0-9ABCDEF]{8}$", hpAmiKeygen);
     #endif
 
+    #ifdef ENABLE_INSYDE
+        solvers[count++] = makeSolver("acerInsydeKeygen", "Some Acer, HP  laptops. 8 digits", "0173549286", "^[0-9]{10}$", acerInsydeKeygen);
+        solvers[count++] = makeSolver("insydeKeygen", "Insyde H20 (generic)", "03133610", "^[0-9]{8}$", insydeKeygen);
+        solvers[count++] = makeSolver("hpInsydeKeygen", "HP Insyde H2O", "i 70412809", "[i \\d{8}]", hpInsydeKeygen);
+    #endif
+
     solvers[count++] = (Solver){ NULL, NULL, NULL, NULL };
 
     if (argc != 2) {
@@ -136,7 +143,7 @@ int main(int argc, char *argv[]) {
     srand(time(NULL));
 
     printf("Try one of the following codes:\n");
-    printf("%-18s | %-15s\n", "Solver Name", "Unlock Code");
+    printf("%-18s | %-15s\n", "Solver Name", "Unlock Code(s)");
     printf("-------------------+---------------\n");
     for (int i = 0; solvers[i].name; ++i) {
         regex_t regex;
@@ -149,6 +156,7 @@ int main(int argc, char *argv[]) {
                 success = 1;
                 //printf("%s : %s\n", solvers[i].name, code);
                 printf("%-18s | %-15s\n", solvers[i].name, code);
+                free(code);
             }
             //printf("MATCH ON %s\n", solvers[i].name);
         } else {
@@ -163,6 +171,6 @@ int main(int argc, char *argv[]) {
     }
 
     //printf("Unlock code(s): %s\n", code);
-    free(code);
+    //free(code);
     return 0;
 }
