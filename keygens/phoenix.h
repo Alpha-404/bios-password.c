@@ -7,6 +7,7 @@ typedef struct {
     int NotFound;
 } PhoenixErrors;
 
+
 typedef struct {
     int shift;
     int salt;
@@ -35,6 +36,11 @@ typedef struct PhoenixSolver {
     char** (*keygen)(const char* code, PhoenixInfo* info);  // returns array of strings
     int (*calculateHash)(const char* password, PhoenixInfo* info);
 } PhoenixSolver;
+
+typedef struct PhoenixWrapperContext {
+    PhoenixSolver solver;
+    PhoenixInfo info;
+} PhoenixWrapperContext;
 
 extern const char digitsOnly[];
 extern const char lettersOnly[];

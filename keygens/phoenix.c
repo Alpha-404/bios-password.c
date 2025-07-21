@@ -7,12 +7,52 @@
 #include "phoenix.h"
  
 #define MAX_ATTEMPTS 7000000
+#define MAX_PHOENIX_SOLVERS 8
+
 
 static PhoenixSolver* currentPhoenixSolver = NULL;
 static PhoenixInfo *currentPhoenixInfo = NULL;
 
 const char digitsOnly[] = "123456789";
 const char lettersOnly[] = "abcdefghijklmnopqrstuvwxyz";
+
+static PhoenixWrapperContext phoenixContexts[MAX_PHOENIX_SOLVERS];
+static int phoenixContextCount = 0;
+typedef char* (*PhoenixWrapperFn)(const char *);
+// static PhoenixWrapperFn phoenixWrappers[MAX_PHOENIX_SOLVERS];
+
+#define DEFINE_PHOENIX_WRAPPER(N)                      \
+    static char* phoenixWrapper##N(const char *code) { \
+        PhoenixWrapperContext *ctx = &phoenixContexts[N]; \
+        char** results = ctx->solver.keygen(code, &ctx->info); \
+        char* result = NULL; \
+        if (results) { \
+            for (int i = 0; results[i]; ++i) { \
+                if (!ctx->solver.validator || ctx->solver.validator(results[i])) { \
+                    result = strdup(results[i]); \
+                    break; \
+                } \
+            } \
+            for (int i = 0; results[i]; ++i) free(results[i]); \
+            free(results); \
+        } \
+        return result; \
+    }
+
+DEFINE_PHOENIX_WRAPPER(0)
+DEFINE_PHOENIX_WRAPPER(1)
+DEFINE_PHOENIX_WRAPPER(2)
+DEFINE_PHOENIX_WRAPPER(3)
+DEFINE_PHOENIX_WRAPPER(4)
+DEFINE_PHOENIX_WRAPPER(5)
+DEFINE_PHOENIX_WRAPPER(6)
+DEFINE_PHOENIX_WRAPPER(7)
+
+PhoenixWrapperFn phoenixWrappers[MAX_PHOENIX_SOLVERS] = {
+    phoenixWrapper0, phoenixWrapper1, phoenixWrapper2, phoenixWrapper3,
+    phoenixWrapper4, phoenixWrapper5, phoenixWrapper6, phoenixWrapper7
+};
+
 
 PhoenixInfo defaultPhoenix = {
   0,
@@ -172,6 +212,7 @@ char** keygen(const char* code, PhoenixInfo* info) {
     */
 }
 
+/*
 static char* phoenixKeygenWrapper(const char* code) {
     if (!currentPhoenixInfo) {
         fprintf(stderr, "ERROR: phoenixKeygenWrapper called without PhoenixInfo set\n");
@@ -197,38 +238,39 @@ static char* phoenixKeygenWrapper(const char* code) {
 
     return result;
 }
+*/
+
 PhoenixSolver makePhoenixSolver(const PhoenixBios* description) {
-    PhoenixSolver solver = {
-        .base = makeSolver(
-        description && description->name ? description->name : "unknown",
-        description && description->description ? description->description : "unknown",
-        description && description->pattern ? description->pattern : ".*", // or description->regex if you want regex support
-        phoenixKeygenWrapper // correct signature
-        ),
-        .info = defaultPhoenix,
+    if (phoenixContextCount >= MAX_PHOENIX_SOLVERS) {
+        fprintf(stderr, "Too many Phoenix solvers\n");
+        exit(1);
+    }
+
+    PhoenixWrapperContext *ctx = &phoenixContexts[phoenixContextCount];
+    PhoenixSolver *solver = &ctx->solver;
+    ctx->info = defaultPhoenix;
+
+    if (description) {
+        if (description->salt) ctx->info.salt = description->salt;
+        if (description->shift) ctx->info.shift = description->shift;
+        if (description->dictionary) ctx->info.dictionary = description->dictionary;
+    }
+
+    *solver = (PhoenixSolver){
+        .info = ctx->info,
         .validator = validator,
         .cleaner = cleaner,
         .keygen = keygen,
         .calculateHash = calculateHash
     };
 
-    if (description) {
-        if (description->salt) solver.info.salt = description->salt;
-        if (description->shift) solver.info.shift = description->shift;
-        if (description->dictionary) solver.info.dictionary = description->dictionary;
-    }
+    solver->base = makeSolver(
+        description && description->name ? description->name : "unknown",
+        description && description->description ? description->description : "unknown",
+        description && description->pattern ? description->pattern : ".*",
+        phoenixWrappers[phoenixContextCount]
+    );
 
-    PhoenixInfo* infoCopy = malloc(sizeof(PhoenixInfo));
-    if (infoCopy == NULL) {
-        fprintf(stderr, "Out of memory\n");
-        exit(1);
-    }
-    *infoCopy = solver.info;
-    currentPhoenixInfo = infoCopy;
-
-    PhoenixSolver* persistent = malloc(sizeof(PhoenixSolver));
-    *persistent = solver;
-    currentPhoenixSolver = persistent;
-
-    return *persistent;
+    phoenixContextCount++;
+    return *solver;
 }
