@@ -5,11 +5,12 @@
 typedef struct {
     const char *name;
     const char *description;
+    const char *example;
     char *(*keygen)(const char *serial);
     const char *pattern;
 } Solver;
 
-Solver makeSolver(const char *name, const char *description, const char *pattern, char *(*keygen)(const char *));
+Solver makeSolver(const char *name, const char *description, const char *example, const char *pattern, char *(*keygen)(const char *));
 char *runSolver(Solver solver, const char *serial);
 
 #endif

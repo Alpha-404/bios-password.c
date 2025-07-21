@@ -19,6 +19,7 @@ typedef struct {
 typedef struct {
     const char* name;
     const char* description;
+    const char* example;
     int salt;
     int shift;
     const char* dictionary;

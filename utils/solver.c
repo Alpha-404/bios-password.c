@@ -3,10 +3,11 @@
 #include <stdlib.h>
 #include "solver.h"
 
-Solver makeSolver(const char *name, const char *description, const char *pattern, char *(*keygen)(const char *)) {
+Solver makeSolver(const char *name, const char *description, const char *example, const char *pattern, char *(*keygen)(const char *)) {
     Solver s;
     s.name = name;
     s.description = description;
+    s.example = example;
     s.pattern = pattern;
     s.keygen = keygen;
     return s;

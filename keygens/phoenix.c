@@ -267,6 +267,7 @@ PhoenixSolver makePhoenixSolver(const PhoenixBios* description) {
     solver->base = makeSolver(
         description && description->name ? description->name : "unknown",
         description && description->description ? description->description : "unknown",
+        description && description->example ? description->example : "",
         description && description->pattern ? description->pattern : ".*",
         phoenixWrappers[phoenixContextCount]
     );

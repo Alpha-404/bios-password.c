@@ -37,18 +37,19 @@ int main(int argc, char *argv[]) {
     int count = 0;
     
     #ifdef ENABLE_SONY
-        solvers[count++] = makeSolver("sony", "Sony 7-digit numeric keygen", "^[0-9]{7}$", sonyKeygen);
+        solvers[count++] = makeSolver("sony", "Sony 7-digit numeric keygen", "1234567", "^[0-9]{7}$", sonyKeygen);
     #endif
 
     #ifdef ENABLE_HPMINI
-        solvers[count++] = makeSolver("hpmini", "HP Mini 10-character alphanumeric keygen", "^[0-9A-Z]{10}$", hpminiKeygen);
+        solvers[count++] = makeSolver("hpmini", "HP Mini 10-character alphanumeric keygen", "CNU1234ABC", "^[0-9A-Z]{10}$", hpminiKeygen);
     #endif
 
     #ifdef ENABLE_PHOENIX
         PhoenixSolver phoenix = makePhoenixSolver(&(PhoenixBios){
             .name = "phoenix",
             .description = "Generic Phoenix",
-            .pattern = "^[0-9]{5}$"
+            .pattern = "^[0-9]{5}$",
+            .example = "12345"
         });
         solvers[count++] = phoenix.base;
 
@@ -56,7 +57,8 @@ int main(int argc, char *argv[]) {
             .name = "phoenixHP",
             .description = "HP/Compaq Phoenix BIOS",
             .salt = 17232,
-            .pattern = "^[0-9]{5}$"
+            .pattern = "^[0-9]{5}$",
+            .example = "12345"
         });
         solvers[count++] = phoenixHPCompaq.base;
 
@@ -65,7 +67,8 @@ int main(int argc, char *argv[]) {
             .description = "Fujitsu-Siemens Phoenix",
             .salt = 65,
             .dictionary = digitsOnly,
-            .pattern = "^[0-9]{5}$"
+            .pattern = "^[0-9]{5}$",
+            .example = "12345"
         });
         solvers[count++] = phoenixFSI.base;
 
@@ -75,7 +78,8 @@ int main(int argc, char *argv[]) {
             .shift = 1,
             .salt = 'L',
             .dictionary = digitsOnly,
-            .pattern = "^[0-9]{5}$"
+            .pattern = "^[0-9]{5}$",
+            .example = "12345"
         });
         solvers[count++] = phoenixFSIModelL.base;
 
@@ -85,7 +89,8 @@ int main(int argc, char *argv[]) {
             .shift = 1,
             .salt = 'P',
             .dictionary = digitsOnly,
-            .pattern = "^[0-9]{5}$"
+            .pattern = "^[0-9]{5}$",
+            .example = "12345"
         });
         solvers[count++] = phoenixFSIModelP.base;
 
@@ -95,7 +100,8 @@ int main(int argc, char *argv[]) {
             .shift = 1,
             .salt = 'S',
             .dictionary = digitsOnly,
-            .pattern = "^[0-9]{5}$"
+            .pattern = "^[0-9]{5}$",
+            .example = "12345"
         });
         solvers[count++] = phoenixFSIModelS.base;
 
@@ -105,21 +111,26 @@ int main(int argc, char *argv[]) {
             .shift = 1,
             .salt = 'X',
             .dictionary = digitsOnly,
-            .pattern = "^[0-9]{5}$"
+            .pattern = "^[0-9]{5}$",
+            .example = "12345"
         });
         solvers[count++] = phoenixFSIModelX.base;
     #endif
 
     #ifdef ENABLE_HPAMI
-        solvers[count++] = makeSolver("hpami", "HP AMI", "^[0-9ABCDEF]{8}$", hpAmiKeygen);
+        solvers[count++] = makeSolver("hpami", "HP AMI", "CNU1234ABX", "^[0-9ABCDEF]{8}$", hpAmiKeygen);
     #endif
 
     solvers[count++] = (Solver){ NULL, NULL, NULL, NULL };
 
     if (argc != 2) {
         fprintf(stderr, "Usage: %s SERIAL\n", argv[0]);
-        printf("Keygens: \n");
-        list_solvers(solvers);
+        printf("Try one of the following codes:\n");
+        printf("%-18s | %-42s | %-21s| %-12s\n", "Solver Name", "Description", "Example", "Regex");
+        printf("-------------------+--------------------------------------------+----------------------+---------------\n");
+        for (int i = 0; solvers[i].name; ++i) {
+            printf("%-18s | %-42s | %-21s| %-12s\n", solvers[i].name, solvers[i].description, solvers[i].example, solvers[i].pattern);
+        }
         return 1;
     }
 
