@@ -65,8 +65,6 @@ int searchBadCRC16(const int *pwd, int len, int salt, int requiredHash, int minL
 }
 
 void generatePhoenixPassword(int *encodedPwd, int encodedLen, const char *characters, int charLen) {
-    srand(0);
-
     CharMap *reversedScanCodes = generateReverseKeyDict(keyboardDict, keyboardDict_SIZE);
 
     /*
@@ -127,10 +125,12 @@ void cleaner(char* code) {
 }
 
 int validator(const char* code) {
+    /*
     if (strlen(code) != 5) return 0;
     for (int i = 0; i < 5; i++) {
         if (!isdigit((unsigned char)code[i])) return 0;
     }
+    */
     return 1;
 }
 
@@ -150,7 +150,6 @@ int calculateHash(const char* password, PhoenixInfo* info) {
 
 
 char** keygen(const char* code, PhoenixInfo* info) {
-    /*
     int hash = atoi(code) + info->shift;
 
     char* pwd = bruteforce(hash, info->salt, info->dictionary, info->minLen, info->maxLen);
@@ -158,7 +157,7 @@ char** keygen(const char* code, PhoenixInfo* info) {
     results[0] = pwd ? strdup(pwd) : NULL;
     results[1] = NULL;
     return results;
-    */
+    /*
     int hash = calculateHash(code, info);
     char buffer[16];
     snprintf(buffer, sizeof(buffer), "%d", hash);
@@ -170,6 +169,7 @@ char** keygen(const char* code, PhoenixInfo* info) {
     results[1] = NULL;
 
     return results;
+    */
 }
 
 static char* phoenixKeygenWrapper(const char* code) {

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include "keygens/sony.h"
 #include "keygens/hpmini.h"
@@ -125,9 +126,12 @@ int main(int argc, char *argv[]) {
     const char *serial = argv[2];
     char *code = NULL;
 
+    srand(time(NULL));
+
     for (int i = 0; solvers[i].name; ++i) {
         if (strcmp(solvers[i].name, vendor) == 0) {
             code = runSolver(solvers[i], serial);
+            printf("%s", solvers[i].name);
             break;
         }
     }
