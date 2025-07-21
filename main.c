@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
         PhoenixSolver phoenix = makePhoenixSolver(&(PhoenixBios){
             .name = "phoenix",
             .description = "Generic Phoenix",
-            .pattern = ".*"
+            .pattern = "^[0-9]{5}$"
         });
         solvers[count++] = phoenix.base;
 
@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
             .name = "phoenixHP",
             .description = "HP/Compaq Phoenix BIOS",
             .salt = 17232,
-            .pattern = ".*"
+            .pattern = "^[0-9]{5}$"
         });
         solvers[count++] = phoenixHPCompaq.base;
 
@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
             .description = "Fujitsu-Siemens Phoenix",
             .salt = 65,
             .dictionary = digitsOnly,
-            .pattern = ".*"
+            .pattern = "^[0-9]{5}$"
         });
         solvers[count++] = phoenixFSI.base;
 
@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
             .shift = 1,
             .salt = 'L',
             .dictionary = digitsOnly,
-            .pattern = ".*"
+            .pattern = "^[0-9]{5}$"
         });
         solvers[count++] = phoenixFSIModelL.base;
 
@@ -84,7 +84,7 @@ int main(int argc, char *argv[]) {
             .shift = 1,
             .salt = 'P',
             .dictionary = digitsOnly,
-            .pattern = ".*"
+            .pattern = "^[0-9]{5}$"
         });
         solvers[count++] = phoenixFSIModelP.base;
 
@@ -94,7 +94,7 @@ int main(int argc, char *argv[]) {
             .shift = 1,
             .salt = 'S',
             .dictionary = digitsOnly,
-            .pattern = ".*"
+            .pattern = "^[0-9]{5}$"
         });
         solvers[count++] = phoenixFSIModelS.base;
 
@@ -104,7 +104,7 @@ int main(int argc, char *argv[]) {
             .shift = 1,
             .salt = 'X',
             .dictionary = digitsOnly,
-            .pattern = ".*"
+            .pattern = "^[0-9]{5}$"
         });
         solvers[count++] = phoenixFSIModelX.base;
     #endif
@@ -131,7 +131,7 @@ int main(int argc, char *argv[]) {
     for (int i = 0; solvers[i].name; ++i) {
         if (strcmp(solvers[i].name, vendor) == 0) {
             code = runSolver(solvers[i], serial);
-            printf("%s", solvers[i].name);
+            //printf("%s", solvers[i].name);
             break;
         }
     }
