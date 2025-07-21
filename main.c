@@ -9,6 +9,7 @@
 #include "keygens/phoenix.h"
 #include "keygens/hpami.h"
 #include "keygens/insyde.h"
+#include "keygens/asus.h"
 
 #include "utils/solver.h"
 
@@ -120,6 +121,10 @@ int main(int argc, char *argv[]) {
         solvers[count++] = makeSolver("acerInsydeKeygen", "Some Acer, HP  laptops. 8 digits", "0173549286", "^[0-9]{10}$", acerInsydeKeygen);
         solvers[count++] = makeSolver("insydeKeygen", "Insyde H20 (generic)", "03133610", "^[0-9]{8}$", insydeKeygen);
         solvers[count++] = makeSolver("hpInsydeKeygen", "HP Insyde H2O", "i 70412809", "[i \\d{8}]", hpInsydeKeygen);
+    #endif
+
+    #ifdef ENABLE_ASUS
+        solvers[count++] = makeSolver("asus", "ASUS (alt+r in bios pw to use)", "2010-02-03", "^[0-9]{4}-[0-9]{2}-[0-9]{2}$", asusKeygen);
     #endif
 
     solvers[count++] = (Solver){ NULL, NULL, NULL, NULL };
