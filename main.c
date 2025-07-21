@@ -26,12 +26,6 @@ struct {
 };
 */
 
-void list_solvers(const Solver solvers[]) {
-    for (int i = 0; solvers[i].name != NULL; i++) {
-        printf("%s: %s\n", solvers[i].name, solvers[i].description);
-    }
-}
-
 int main(int argc, char *argv[]) {
     Solver solvers[MAX_SOLVERS];
     int count = 0;
@@ -125,7 +119,7 @@ int main(int argc, char *argv[]) {
 
     if (argc != 2) {
         fprintf(stderr, "Usage: %s SERIAL\n", argv[0]);
-        printf("Try one of the following codes:\n");
+        printf("\nAvailible keygens:\n");
         printf("%-18s | %-42s | %-21s| %-12s\n", "Solver Name", "Description", "Example", "Regex");
         printf("-------------------+--------------------------------------------+----------------------+---------------\n");
         for (int i = 0; solvers[i].name; ++i) {
