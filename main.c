@@ -1,3 +1,4 @@
+#include <regex.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -115,33 +116,48 @@ int main(int argc, char *argv[]) {
 
     solvers[count++] = (Solver){ NULL, NULL, NULL, NULL };
 
-    if (argc != 3) {
-        fprintf(stderr, "Usage: %s VENDOR SERIAL\n", argv[0]);
+    if (argc != 2) {
+        fprintf(stderr, "Usage: %s SERIAL\n", argv[0]);
         printf("Keygens: \n");
         list_solvers(solvers);
         return 1;
     }
 
-    const char *vendor = argv[1];
-    const char *serial = argv[2];
+    //const char *vendor = argv[1];
+    const char *serial = argv[1];// argv[2];
     char *code = NULL;
+    int success = 0;
 
     srand(time(NULL));
 
+    printf("Try one of the following codes:\n");
+    printf("%-18s | %-15s\n", "Solver Name", "Unlock Code");
+    printf("-------------------+---------------\n");
     for (int i = 0; solvers[i].name; ++i) {
-        if (strcmp(solvers[i].name, vendor) == 0) {
+        regex_t regex;
+        int reti;
+        reti = regcomp(&regex, solvers[i].pattern, REG_EXTENDED | REG_NOSUB);
+        reti = regexec(&regex, serial, 0, NULL, 0);
+        if (!reti) {
             code = runSolver(solvers[i], serial);
-            //printf("%s", solvers[i].name);
-            break;
+            if (code) {
+                success = 1;
+                //printf("%s : %s\n", solvers[i].name, code);
+                printf("%-18s | %-15s\n", solvers[i].name, code);
+            }
+            //printf("MATCH ON %s\n", solvers[i].name);
+        } else {
+            //printf("NO MATCH ON %s ON PATTERN %s\n", solvers[i].name, solvers[i].pattern);
         }
+        //break;
     }
 
-    if (!code) {
+    if (!success) {
         fprintf(stderr, "Unknown vendor or failed to generate code.\n");
         return 1;
     }
 
-    printf("Unlock code(s): %s\n", code);
+    //printf("Unlock code(s): %s\n", code);
     free(code);
     return 0;
 }
