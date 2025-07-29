@@ -1,3 +1,4 @@
 *.o
 keygen
 .cache/
+compile_commands.json
