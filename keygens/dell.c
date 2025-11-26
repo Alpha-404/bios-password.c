@@ -252,7 +252,7 @@ void blockEncode1F66(int *outdata, int *encblock)
 //		printf("R1 i: %d A: %08x B: %08x C: %08x D: %08x\n", i, A, B, C, D);
 
 		for (j=3;j>=0;j--) {
-			A = enc0F6(enc0F5,B,C,D,A,MD5magic[4*(3-j)+48]+encblock[4*j+4&0xF],6);
+			A = enc0F6(enc0F5,B,C,D,A,MD5magic[4*(3-j)+48]+encblock[(4*j+4)&0xF],6);
 			D = enc0F6(enc0F5,A,B,C,D,MD5magic[4*(3-j)+48+1]+encblock[(4*j-5)&0xF],10);
 			C = enc0F6(enc0F5,D,A,B,C,MD5magic[4*(3-j)+48+2]+encblock[(4*j+2)],15);
 			B = enc0F6(enc0F5,C,D,A,B,MD5magic[4*(3-j)+48+3]+encblock[(4*j-7)&0xF],21);
@@ -417,8 +417,7 @@ void blockEncode1D3B(int *outdata, int *encblock)
 }
 #endif
 
-void blockEncode(char *outdata, int *encblock, char btype) {
-	int i;
+void blockEncode(unsigned char *outdata, int *encblock, char btype) {
 	switch(btype) 
 	{
 		case tD35B:
@@ -461,7 +460,7 @@ void blockEncode(char *outdata, int *encblock, char btype) {
 	}
 }
 
-void encode(char *inbuf,int cnt,char btype) {
+void encode(unsigned char *inbuf,int cnt,char btype) {
 	int encBlock[16];
 	char *ptr;
 	initData();
@@ -479,7 +478,7 @@ void psw(char bfunc, char btype, char *outbuf) {
 		memcpy(inData,buf1input,11);
 		calcsuffix(bfunc,btype,outbuf);
 		for (cnt=0;cnt<8;cnt++)
-			outbuf[cnt]= scancods[ outbuf[cnt] ];
+			outbuf[cnt]= scancods[ (unsigned char) outbuf[cnt] ];
 	} else {
 		memset(inData,0,sizeof(inData));
 
@@ -491,7 +490,7 @@ void psw(char bfunc, char btype, char *outbuf) {
 		else
 			memcpy(inData,buf1input,cnt);
 		calcsuffix(bfunc,btype,outbuf);
-		memcpy(&inData[cnt],bSuffix[btype],4);
+		memcpy(&inData[cnt],bSuffix[ (unsigned char) btype],4);
 		memcpy(&inData[cnt+4],outbuf,8);
 		encode(inData,23,btype);
 		r = outData[0] % 9;
@@ -499,7 +498,8 @@ void psw(char bfunc, char btype, char *outbuf) {
 		for (cnt=0;cnt<16;cnt++) {
 			if ( (btype==t595B) || (btype==tD35B) || (btype==tA95B) || (btype == t3A5B) ) {
 				if ((r <= cnt) && (lenpsw<8)) {
-					buf1output[lenpsw++] = scancods[encscans[outData[cnt] % sizeof(encscans)]];
+					//buf1output[lenpsw++] = scancods[encscans[ (unsigned char) (outData[cnt]) % sizeof(encscans)]];
+          buf1output[lenpsw++] = scancods[(unsigned char) encscans[(unsigned char)(outData[cnt] % sizeof(encscans))]];
 				}
 			} else if ((btype==t2A7B) || (btype == t1F5A) ) { 
 				buf1output[lenpsw++] = chartabl2A7B[outData[cnt] % sizeof(chartabl2A7B)];
@@ -566,7 +566,9 @@ void calcsuffix(char bfunc, char btype, char* outbuf) {
 }
 
 int _main(int argc, char *argv[]) {
-	unsigned char len,len1,bfunc,eol=1,echo=0, *minus,s2[20];
+	unsigned char len,len1,bfunc,eol=1,echo=0;
+  char s2[20];
+  char *minus;
 	signed char btype; int argn=0;
 
 	if (argc>1)
@@ -586,7 +588,8 @@ int _main(int argc, char *argv[]) {
             argc--;
 		}
 		else {
-			if (!eol) while (!feof(stdin) && (fgetc(stdin)!='\n')); eol=0;
+			if (!eol) while (!feof(stdin) && (fgetc(stdin)!='\n'));
+        eol=0;
 			if (fgets(buf1input,16+1+1,stdin)==NULL) {
 				if (echo) fputs("\n",stdout);
 				break;
@@ -614,7 +617,7 @@ int _main(int argc, char *argv[]) {
 				fputs("- No BIOS type found in input string, must be followed by -595B and other registered\n",stdout);
 				continue;
 			}
-			len1=minus-(unsigned char*)buf1input;
+			len1=minus-(char*)buf1input;
 
 			btype=-1;
 #ifdef allow595B
@@ -700,19 +703,21 @@ char *returnts(char* message){
 }
 
 char *dellKeygen(const char *serial) {
-    unsigned char len,len1,bfunc,eol=1,echo=0, *minus,s2[20];
-	signed char btype; int argn=0;
+    unsigned char len,len1,bfunc,echo=0;
+    char s2[20];
+    char *minus;
+	  signed char btype;
 
 		strncpy(buf1input,serial,sizeof(buf1input));
 		len=strlen(buf1input);
-		if (len && (buf1input[len-1]=='\n')) {len--;eol=1;buf1input[len]=0;}
+		if (len && (buf1input[len-1]=='\n')) {len--;buf1input[len]=0;}
 		if (echo) {fputs(buf1input,stdout);fputs("\n",stdout);}
 		for (len1=0;len1<len;len1++) {
 			if (isalpha(buf1input[len1])) {
 				buf1input[len1] = toupper(buf1input[len1]);
 			}
 		}
-		minus=strchr(buf1input,'-');
+		minus=strchr((char *)buf1input,'-');
 		if (len==11) { //hdd serial
 			if (minus!=NULL) {
 				//fputs("- Incorrect input\n",stdout);
@@ -727,7 +732,7 @@ char *dellKeygen(const char *serial) {
 				//continue;
                 return returnts("Unable to identify bios type");
 			}
-			len1=minus-(unsigned char*)buf1input;
+			len1=minus-(char*)buf1input;
 
 			btype=-1;
 #ifdef allow595B
@@ -798,4 +803,5 @@ char *dellKeygen(const char *serial) {
 		} else {
             return returnts(buf1output);
         }
+  return returnts("failed");
 }

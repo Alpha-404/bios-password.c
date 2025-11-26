@@ -1,8 +1,7 @@
-#include "../utils/crc32.h"
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <stdint.h>          // for uint32_t, uint8_t
+#include <stdlib.h>          // for NULL, malloc, strtoul
+#include <string.h>          // for strlen
+#include "../utils/crc32.h"  // for crc32_update, crc32_digest, crc32_hexdigest
 
 char *hpAmiKeygen(const char *input) {
     if (strlen(input) != 8) {

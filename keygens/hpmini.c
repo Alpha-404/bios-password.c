@@ -1,9 +1,8 @@
-#include<stdio.h>
-#include <string.h>
-#include <regex.h>
 #include "hpmini.h"
-#include <stdlib.h>
-#include "../utils/utils.h"
+#include <stdio.h>           // for snprintf, NULL, size_t
+#include <stdlib.h>          // for free, malloc
+#include <string.h>          // for strlen, strcmp, strdup
+#include "../utils/utils.h"  // for strToLower, CharMap, lookup
 
 CharMap table1[] = {
     {'1', '3'}, {'0', '1'}, {'3', 'F'}, {'2', '7'}, {'5', 'Q'}, {'4', 'V'},

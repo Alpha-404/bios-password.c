@@ -1,10 +1,11 @@
+#include "phoenix.h"
 #include <ctype.h>
-#include <math.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include <math.h>                                                  // for fmod
+#include <stdio.h>                                                 // for NULL
+#include <stdlib.h>                                                // for free
 #include <string.h>
 #include "../utils/utils.h"
-#include "phoenix.h"
+#include "../utils/solver.h"
  
 #define MAX_ATTEMPTS 7000000
 #define MAX_PHOENIX_SOLVERS 8

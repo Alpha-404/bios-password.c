@@ -1,9 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <regex.h>
 #include "sony.h"
-#include "../utils/solver.h"
+#include <stdlib.h>  // for malloc, size_t, NULL
+#include <string.h>  // for strlen
 
 //1234567 = 9648669
 

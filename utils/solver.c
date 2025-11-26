@@ -1,7 +1,6 @@
-#include <regex.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include "solver.h"
+#include <regex.h>  // for regerror, regcomp, regexec, regfree, REG_EXTENDED
+#include <stdio.h>  // for fprintf, NULL, stderr
 
 Solver makeSolver(const char *name, const char *description, const char *example, const char *pattern, char *(*keygen)(const char *)) {
     Solver s;

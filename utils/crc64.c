@@ -1,7 +1,6 @@
 #include "crc64.h"
-#include <stdint.h>
-#include <stdio.h>
-#include <sys/types.h>
+#include <stdint.h>  // for uint8_t, uint64_t
+#include <stdio.h>   // for sprintf
 
 uint64_t crc_table[256];
 

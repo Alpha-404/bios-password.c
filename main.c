@@ -1,18 +1,17 @@
-#include <regex.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#include <regex.h>            // for regcomp, regerror, regexec, REG_EXTENDED
+#include <stdio.h>            // for printf, NULL, fprintf, stderr
+#include <stdlib.h>           // for free, srand
+#include <time.h>             // for time
 
-#include "keygens/sony.h"
-#include "keygens/hpmini.h"
-#include "keygens/phoenix.h"
-#include "keygens/hpami.h"
-#include "keygens/insyde.h"
-#include "keygens/asus.h"
-#include "keygens/dell.h"
+#include "keygens/asus.h"     // for asusKeygen
+#include "keygens/dell.h"     // for dellKeygen
+#include "keygens/hpami.h"    // for hpAmiKeygen
+#include "keygens/hpmini.h"   // for hpminiKeygen
+#include "keygens/insyde.h"   // for acerInsydeKeygen, hpInsydeKeygen, insyd...
+#include "keygens/phoenix.h"  // for makePhoenixSolver, digitsOnly, PhoenixBios
+#include "keygens/sony.h"     // for sonyKeygen
 
-#include "utils/solver.h"
+#include "utils/solver.h"     // for makeSolver, Solver, runSolver
 
 #define MAX_SOLVERS 16
 

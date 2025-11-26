@@ -1,11 +1,12 @@
 #include "insyde.h"
-#include "../utils/crc64.h"
-#include "../utils/sha256.h"
-#include "../utils/aes128.h"
-#include <regex.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <regex.h>            // for regfree, regcomp, regexec, REG_EXTENDED
+#include <stdint.h>           // for uint8_t
+#include <stdio.h>            // for NULL, snprintf, size_t
+#include <stdlib.h>           // for malloc, atoi
+#include <string.h>           // for strlen, memcpy, strcmp, strncpy
+#include "../utils/aes128.h"  // for aes128_encrypt_block, aes128_key_expansion
+#include "../utils/crc64.h"   // for crc64_hexdigest, crc64_init, crc64_update
+#include "../utils/sha256.h"  // for sha256_final, sha256_init, sha256_update
 
 #define INSYDE_SALT "Insyde Software Corp."
 
