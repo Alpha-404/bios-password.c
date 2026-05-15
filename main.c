@@ -1,6 +1,7 @@
 #include <regex.h>            // for regcomp, regerror, regexec, REG_EXTENDED
 #include <stdio.h>            // for printf, NULL, fprintf, stderr
 #include <stdlib.h>           // for free, srand
+#include <string.h>           // for strcmp
 #include <time.h>             // for time
 
 #include "keygens/asus.h"     // for asusKeygen
@@ -173,11 +174,11 @@ int main(int argc, char *argv[]) {
         reti = regexec(&regex, serial, 0, NULL, 0);
         if (!reti) {
             code = runSolver(solvers[i], serial);
-            if (code) {
+            if (code && strcmp(code, "Unable to identify bios type") != 0) {
                 success = 1;
                 printf("%-18s | %-15s\n", solvers[i].name, code);
-                free(code);
             }
+            free(code);
             //printf("MATCH ON %s\n", solvers[i].name);
         } else {
             //printf("NO MATCH ON %s ON PATTERN %s\n", solvers[i].name, solvers[i].pattern);

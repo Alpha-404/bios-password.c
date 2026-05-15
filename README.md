@@ -26,5 +26,18 @@ hpInsydeKeygen     | HP Insyde H2O                              | i 70412809    
 asus               | ASUS (alt+r in bios pw to use)             | 2010-02-03           | ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
 dellHdd            | old dell hdd serial keygen (11 char)       | *****789XYZ          | ^[ *]{0,10}[A-Z0-9]{1,11}$
 dellServiceTag     | old dell service tag keygen (7 char)       | ABC12**              | ^[A-Z0-9]{1,7}\*{0,6}$
+```
+```
+➜  C git:(vendorless) ✗ ./keygen 12345
+Try one of the following codes:
+Solver Name        | Unlock Code(s) 
+-------------------+---------------
+phoenix            | iecqo          
+phoenixHP          | tguledw        
+phoenixFSI         | 812113         
+phoenixFSIModelL   | 4693232        
+phoenixFSIModelP   | 461157         
+phoenixFSIModelS   | 962157         
+phoenixFSIModelX   | 812822         
 ➜  C git:(vendorless) ✗ 
 ```
