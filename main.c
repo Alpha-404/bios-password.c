@@ -129,7 +129,7 @@ int main(int argc, char *argv[]) {
 
     #ifdef ENABLE_DELL
         solvers[count++] = makeSolver("dellHdd", "old dell hdd serial keygen (11 char)", "*****789XYZ", "^[ *]{0,10}[A-Z0-9]{1,11}$", dellKeygen);
-        solvers[count++] = makeSolver("dellServiceTag", "old dell service tag keygen (7 char), can be right padded with *", "ABC1234", "^[A-Z0-9]{1,7}\\*{0,6}$", dellKeygen);
+        solvers[count++] = makeSolver("dellServiceTag", "old dell service tag keygen (7 char)", "ABC12**", "^[A-Z0-9]{1,7}\\*{0,6}$", dellKeygen);
 
     #endif
 
@@ -137,7 +137,7 @@ int main(int argc, char *argv[]) {
 
     if (argc != 2) {
         fprintf(stderr, "Usage: %s SERIAL\n", argv[0]);
-        printf("\nAvailible keygens:\n");
+        printf("\nAvailable keygens:\n");
         printf("%-18s | %-42s | %-21s| %-12s\n", "Solver Name", "Description", "Example", "Regex");
         printf("-------------------+--------------------------------------------+----------------------+---------------\n");
         for (int i = 0; solvers[i].name; ++i) {
